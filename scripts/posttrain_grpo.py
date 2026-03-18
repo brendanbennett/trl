@@ -9,7 +9,6 @@ training_args = GRPOConfig(
     report_to="wandb",
     learning_rate=1e-6,
     beta=0.001,
-    max_prompt_length=2048,
     max_completion_length=24576,
     num_generations=16,
     temperature=0.6,
