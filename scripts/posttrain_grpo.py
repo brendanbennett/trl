@@ -15,6 +15,7 @@ training_args = GRPOConfig(
     max_steps=1800,
     max_grad_norm=5.0,
     per_device_train_batch_size=1,
+    gradient_accumulation_steps=16,
     use_vllm=False, # restricted to 1 task on 1 GPU
 )
 
