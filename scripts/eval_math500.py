@@ -40,6 +40,9 @@ Examples:
 
 from dataclasses import dataclass, field
 
+import json
+import os
+
 from datasets import load_dataset
 from transformers import AutoTokenizer, HfArgumentParser
 from vllm import LLM, SamplingParams
@@ -78,6 +81,16 @@ if __name__ == "__main__":
     # Load dataset
     dataset = load_dataset(script_args.dataset_name, split="test")
 
+    # Fix tokenizer_config.json if extra_special_tokens was saved as a list (transformers compatibility issue)
+    tokenizer_config_path = os.path.join(script_args.model_name_or_path, "tokenizer_config.json")
+    if os.path.exists(tokenizer_config_path):
+        with open(tokenizer_config_path) as f:
+            tokenizer_config = json.load(f)
+        if isinstance(tokenizer_config.get("extra_special_tokens"), list):
+            tokenizer_config["extra_special_tokens"] = {}
+            with open(tokenizer_config_path, "w") as f:
+                json.dump(tokenizer_config, f, indent=2)
+
     # Build chat-formatted prompts
     tokenizer = AutoTokenizer.from_pretrained(script_args.model_name_or_path)
     prompts = []
@@ -87,7 +100,7 @@ if __name__ == "__main__":
         prompts.append(prompt)
 
     # Generate completions
-    llm = LLM(model=script_args.model_name_or_path, tensor_parallel_size=script_args.tensor_parallel_size)
+    llm = LLM(model=script_args.model_name_or_path, tensor_parallel_size=script_args.tensor_parallel_size, enforce_eager=True)
     sampling_params = SamplingParams(
         temperature=script_args.temperature,
         top_p=1.0,
