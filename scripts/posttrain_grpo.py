@@ -17,6 +17,14 @@ class ScriptArguments:
         default=None,
         metadata={"help": "Output directory. Defaults to 'output_YYYYMMDD_HHMMSS'."},
     )
+    per_device_train_batch_size: int = field(
+        default=2,
+        metadata={"help": "Batch size per device during training."},
+    )
+    gradient_accumulation_steps: int = field(
+        default=8,
+        metadata={"help": "Number of gradient accumulation steps."},
+    )
 
 
 if __name__ == "__main__":
@@ -40,8 +48,8 @@ if __name__ == "__main__":
         temperature=0.6,
         max_steps=1800,
         max_grad_norm=5.0,
-        per_device_train_batch_size=1,
-        gradient_accumulation_steps=16,
+        per_device_train_batch_size=script_args.per_device_train_batch_size,
+        gradient_accumulation_steps=script_args.gradient_accumulation_steps,
         use_vllm=False,  # restricted to 1 task on 1 GPU
     )
 
