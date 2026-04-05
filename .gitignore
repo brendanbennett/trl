@@ -148,3 +148,5 @@ wandb/
 *.out
 
 output/
+output_*/
+/logs/
