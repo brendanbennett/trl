@@ -6,6 +6,7 @@
 #SBATCH -J grpo
 #SBATCH -o logs/%x_%j.out
 #SBATCH -e logs/%x_%j.err
+#SBATCH -D $HOME/scratch/trl
 
 module purge
 module load libs/cuda

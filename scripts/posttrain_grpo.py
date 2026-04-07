@@ -32,7 +32,7 @@ if __name__ == "__main__":
     script_args = parser.parse_args_into_dataclasses()[0]
 
     if script_args.output_dir is None:
-        script_args.output_dir = f"output_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        script_args.output_dir = f"output/runs/{datetime.now().strftime('%Y%m%d_%H%M%S')}"
 
     dataset = load_dataset("trl-lib/DeepMath-103K", split="train")
 
